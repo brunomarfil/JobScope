@@ -4,58 +4,71 @@ import ReactMarkdown from 'react-markdown'
 import { FaSearch } from 'react-icons/fa'
 
 function App() {
+
   const [search, setSearch] = useState('')
   const [result, setResult] = useState('')
   const [loading, setLoading] = useState(false)
   const [video, setVideo] = useState('')
 
   async function handleSearch() {
-  if (!search) return
 
-  setLoading(true)
-  setResult('')
+    if (!search) return
 
-  try {
-    const response = await fetch(
-      `http://localhost:8000/career/${search}`
-    )
+    setLoading(true)
+    setResult('')
+    setVideo('')
 
-    const data = await response.json()
+    try {
 
-    console.log(data)
+      const response = await fetch(
+        `https://jobscope-71hm.onrender.com/career/${search}`
+      )
 
-    if (data.text) {
-      setResult(data.text)
-      setVideo(data.video)
-    } else if (data.error) {
-      setResult("Erro da IA: " + data.error)
-    } else {
-      setResult("Nenhuma resposta encontrada.")
+      const data = await response.json()
+
+      console.log(data)
+
+      if (data.text) {
+
+        setResult(data.text)
+        setVideo(data.video)
+
+      } else if (data.error) {
+
+        setResult("Erro da IA: " + data.error)
+
+      } else {
+
+        setResult("Nenhuma resposta encontrada.")
+
+      }
+
+    } catch (error) {
+
+      console.error(error)
+      setResult('Erro ao conectar com o backend.')
+
     }
 
-  } catch (error) {
-    console.error(error)
-    setResult('Erro ao conectar com o backend.')
+    setLoading(false)
   }
-
-  setLoading(false)
-}
 
   return (
     <>
       <nav className="navbar">
 
-  <div className="logo-area">
+        <div className="logo-area">
 
-    <FaSearch className="logo-icon" />
+          <FaSearch className="logo-icon" />
 
-    <h1>JobScope</h1>
+          <h1>JobScope</h1>
 
-  </div>
+        </div>
 
-</nav>
+      </nav>
 
       <section className="hero">
+
         <h1>Descubra o dia a dia das profissões</h1>
 
         <p>
@@ -63,6 +76,7 @@ function App() {
         </p>
 
         <div className="search-area">
+
           <input
             type="text"
             placeholder="Ex: Medicina, UX Design, Psicologia..."
@@ -74,10 +88,13 @@ function App() {
           <button onClick={handleSearch}>
             Pesquisar
           </button>
+
         </div>
+
       </section>
 
       <section className="results">
+
         {loading && (
           <div className="loading">
             Analisando profissão...
@@ -85,49 +102,54 @@ function App() {
         )}
 
         {result && (
+
           <div className="ai-card">
 
-  <h2>{search}</h2>
+            <h2>{search}</h2>
 
-  <div className="content-grid">
+            <div className="content-grid">
 
-    <div className="ai-text">
-      <ReactMarkdown>
-        {result}
-      </ReactMarkdown>
-    </div>
+              <div className="ai-text">
 
-    {video && (
-      <div className="video-section">
+                <ReactMarkdown>
+                  {result}
+                </ReactMarkdown>
 
-        <h3>
-          🎥 Assista ao dia a dia da profissão
-        </h3>
+              </div>
 
-        <iframe
-          src={video}
-          title="Vídeo da profissão"
-          allowFullScreen
-        />
+              {video && (
 
-      </div>
-    )}
+                <div className="video-section">
 
-  </div>
+                  <h3>
+                    🎥 Assista ao dia a dia da profissão
+                  </h3>
 
-</div>
+                  <iframe
+                    src={video}
+                    title="Vídeo da profissão"
+                    allowFullScreen
+                  />
+
+                </div>
+
+              )}
+
+            </div>
+
+          </div>
+
         )}
 
       </section>
 
       <footer className="footer">
 
-  <p>
-    © 2026 JobScope • Explore carreiras com IA
-  </p>
+        <p>
+          © 2026 JobScope • Explore carreiras com IA
+        </p>
 
-</footer>
-
+      </footer>
     </>
   )
 }
