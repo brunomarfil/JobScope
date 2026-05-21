@@ -21,8 +21,8 @@ function App() {
     try {
 
       const response = await fetch(
-        `https://jobscope-71hm.onrender.com/career/${search}`
-      )
+  `http://127.0.0.1:8000/career/${search}`
+)
 
       const data = await response.json()
 
